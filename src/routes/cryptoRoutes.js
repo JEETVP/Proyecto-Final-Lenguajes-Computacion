@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const cryptoController = require('../controllers/cryptoController');
+const cryptoController = require('../controllers/cryptoController');  // Asegúrate de que esta importación sea correcta
 
 // Endpoints de Criptografía
 
@@ -15,12 +15,13 @@ router.post('/encrypt/aes_cbc', cryptoController.aesEncrypt);  // Cifrar con AES
 router.post('/decrypt/aes_cbc', cryptoController.aesDecrypt);  // Descifrar con AES
 
 // Endpoint para cifrar con clave pública (RSA)
-router.post('/api/encrypt/rsa', cryptoController.encryptWithPublicKey);
+router.post('/api/encrypt/rsa', cryptoController.encryptWithPublicKey);  // Cifrar con clave pública RSA
 
 // Endpoint para descifrar con clave privada (RSA)
-router.post('/api/decrypt/rsa', cryptoController.decryptWithPrivateKey);
+router.post('/api/decrypt/rsa', cryptoController.decryptWithPrivateKey);  // Descifrar con clave privada RSA
 
 module.exports = router;
+
 
 
 
