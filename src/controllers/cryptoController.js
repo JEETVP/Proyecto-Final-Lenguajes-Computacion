@@ -121,6 +121,7 @@ const aesDecrypt = (req, res) => {
   }
 };
 
+// Endpoint para cifrar con clave pública
 const encryptWithPublicKey = (req, res) => {
   const { publicKeyBase64, data } = req.body;
   try {
@@ -141,7 +142,6 @@ const decryptWithPrivateKey = (req, res) => {
     res.status(500).json({ error: 'Error al descifrar el dato' });
   }
 };
-
 
 
 module.exports = {

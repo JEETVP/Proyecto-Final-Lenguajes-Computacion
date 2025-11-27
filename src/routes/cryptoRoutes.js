@@ -1,15 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { 
-  sha256Hash, 
-  argon2Hash, 
-  aesEncrypt, 
-  aesDecrypt, 
-  chacha20Encrypt, 
-  chacha20Decrypt, 
-  generateRsaKey,  
-  generateDsaKey 
-} = require('../controllers/cryptoController');
+const cryptoController = require('../controllers/cryptoController');
 
 // Endpoints de Criptografía
 
