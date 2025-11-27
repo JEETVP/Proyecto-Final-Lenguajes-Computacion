@@ -50,23 +50,39 @@ const aesDecryptService = (encryptedText, key, iv) => {
   return decrypted;  // Retorna el texto descifrado en UTF-8
 };
 
-const chacha20EncryptService = (text, key, nonce) => {
+const chacha20Encrypt = (req, res) => {
   try {
-    console.log('Text:', text);  // Verificamos el texto a cifrar
-    console.log('Key (32 bytes):', key.toString('base64'));  // Verificamos la clave en base64
-    console.log('Nonce (12 bytes):', nonce.toString('base64'));  // Verificamos el nonce en base64
+    const { text, key, nonce } = req.body;
 
-    // Crear un cifrador ChaCha20 usando la clave y el nonce
-    const cipher = crypto.createCipheriv('chacha20', key, nonce);
-    
-    // Cifrar el texto en Base64
-    let encrypted = cipher.update(text, 'utf8', 'base64');
-    encrypted += cipher.final('base64');
-    
-    return encrypted;
+    // Verificar que la clave y el nonce estén presentes
+    if (!key || !nonce) {
+      return res.status(400).json({ error: 'La clave y el nonce son requeridos' });
+    }
+
+    // Decodificar la clave y el nonce de Base64
+    const keyBuffer = Buffer.from(key, 'base64');
+    const nonceBuffer = Buffer.from(nonce, 'base64');
+
+    // Verificar que la clave tenga 32 bytes
+    if (keyBuffer.length !== 32) {
+      console.error(`Tamaño de la clave en bytes: ${keyBuffer.length}`);  // Log para depuración
+      return res.status(400).json({ error: 'La clave debe ser de 32 bytes (ChaCha20)' });
+    }
+
+    // Verificar que el nonce tenga 12 bytes
+    if (nonceBuffer.length !== 12) {
+      console.error(`Tamaño del nonce en bytes: ${nonceBuffer.length}`);  // Log para depuración
+      return res.status(400).json({ error: 'El nonce debe ser de 12 bytes (ChaCha20)' });
+    }
+
+    // Llamar al servicio para cifrar el texto
+    const encryptedText = chacha20EncryptService(text, keyBuffer, nonceBuffer);
+
+    // Retornar el texto cifrado en Base64
+    res.json({ encrypted: encryptedText });
   } catch (err) {
-    console.error('Error al cifrar con ChaCha20:', err);
-    throw new Error('Error al cifrar con ChaCha20');
+    console.error('Error en el cifrado ChaCha20:', err);
+    res.status(500).json({ error: 'Error al cifrar el texto con ChaCha20' });
   }
 };
 
