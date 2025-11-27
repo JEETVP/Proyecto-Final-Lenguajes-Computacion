@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const argon2 = require('argon2');
+const chacha = require('chacha');
 const { publicEncrypt, privateDecrypt, generateKeyPairSync, createSign, createVerify } = require('crypto');
 
 // SHA-256 Hash
@@ -65,20 +66,16 @@ const chacha20EncryptService = (text, keyBase64, nonceBase64) => {
       throw new Error('El nonce debe ser de 12 bytes (ChaCha20)');
     }
 
-    // Crear el cifrador para ChaCha20
-    const cipher = crypto.createCipheriv('chacha20', key, nonce);
-
-    // Cifrar el texto
-    let encrypted = cipher.update(text, 'utf8', 'base64');
-    encrypted += cipher.final('base64');
+    // Cifrar el texto con ChaCha20
+    const cipher = chacha(key, nonce);
+    const encrypted = cipher.update(text, 'utf8', 'base64') + cipher.final('base64');
 
     return encrypted;
   } catch (err) {
     console.error('Error al cifrar con ChaCha20:', err);
-    throw err;  // Lanzar el error para ser manejado en el controlador
+    throw err;
   }
 };
-
 
 // ChaCha20 Decryption
 const chacha20DecryptService = (encryptedText, key, nonce) => {
