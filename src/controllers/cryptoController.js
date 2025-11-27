@@ -126,7 +126,7 @@ const chacha20Encrypt = (req, res) => {
   try {
     const { text } = req.body;
 
-    // Generar clave de 32 bytes (256 bits) y nonce de 12 bytes
+    // Generar clave de 32 bytes (256 bits) y nonce de 12 bytes (96 bits)
     const key = crypto.randomBytes(32);  // 32 bytes para ChaCha20
     const nonce = crypto.randomBytes(12);   // 12 bytes para el nonce
 

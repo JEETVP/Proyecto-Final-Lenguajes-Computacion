@@ -50,13 +50,14 @@ const aesDecryptService = (encryptedText, key, iv) => {
   return decrypted;  // Retorna el texto descifrado en UTF-8
 };
 
+// ChaCha20 Encrypt
 const chacha20EncryptService = (text, keyBase64, nonceBase64) => {
   try {
-    // Convertir la clave y el nonce de Base64 a Buffer
+    // Convertir clave y nonce de Base64 a Buffer
     const key = Buffer.from(keyBase64, 'base64');
     const nonce = Buffer.from(nonceBase64, 'base64');
 
-    // Verificar que la clave tenga 32 bytes y el nonce 12 bytes
+    // Verificar que la clave tenga 32 bytes y el nonce tenga 12 bytes
     if (key.length !== 32) {
       throw new Error('La clave debe ser de 32 bytes (ChaCha20)');
     }
@@ -77,6 +78,7 @@ const chacha20EncryptService = (text, keyBase64, nonceBase64) => {
     throw err;  // Lanzar el error para ser manejado en el controlador
   }
 };
+
 
 // ChaCha20 Decryption
 const chacha20DecryptService = (encryptedText, key, nonce) => {
