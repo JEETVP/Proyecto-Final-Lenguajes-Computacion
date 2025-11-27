@@ -121,7 +121,6 @@ const aesDecrypt = (req, res) => {
   }
 };
 
-
 // ChaCha20 Encrypt
 const chacha20Encrypt = (req, res) => {
   try {
@@ -148,7 +147,6 @@ const chacha20Encrypt = (req, res) => {
     res.status(500).json({ error: 'Error al cifrar el texto con ChaCha20' });
   }
 };
-
 
 // ChaCha20 Decrypt
 const chacha20Decrypt = (req, res) => {
