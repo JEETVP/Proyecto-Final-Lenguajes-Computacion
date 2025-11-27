@@ -122,6 +122,10 @@ const aesDecrypt = (req, res) => {
 };
 
 // ChaCha20 Encrypt
+const crypto = require('crypto');
+const { chacha20EncryptService } = require('../services/cryptoService');
+
+// ChaCha20 Encrypt
 const chacha20Encrypt = (req, res) => {
   try {
     const { text } = req.body;
@@ -134,6 +138,9 @@ const chacha20Encrypt = (req, res) => {
     const keyBase64 = key.toString('base64');
     const nonceBase64 = nonce.toString('base64');
 
+    console.log(`Generated Key: ${keyBase64}`);
+    console.log(`Generated Nonce: ${nonceBase64}`);
+
     // Llamar al servicio para cifrar el texto
     const encryptedText = chacha20EncryptService(text, keyBase64, nonceBase64);
 
@@ -144,6 +151,7 @@ const chacha20Encrypt = (req, res) => {
     res.status(500).json({ error: 'Error al cifrar el texto con ChaCha20' });
   }
 };
+
 
 // ChaCha20 Decrypt
 const chacha20Decrypt = (req, res) => {

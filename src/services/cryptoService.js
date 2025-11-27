@@ -60,7 +60,7 @@ const chacha20EncryptService = (text, keyBase64, nonceBase64) => {
     throw new Error('La clave debe ser de 32 bytes (ChaCha20)');
   }
   if (nonce.length !== 12) {
-    throw new Error('El nonce debe ser de 12 bytes');
+    throw new Error('El nonce debe ser de 12 bytes (ChaCha20)');
   }
 
   // Crear el cifrador para ChaCha20
