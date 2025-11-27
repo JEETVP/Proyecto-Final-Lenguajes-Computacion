@@ -76,18 +76,19 @@ const aesEncrypt = (req, res) => {
 
 const aesDecrypt = (req, res) => {
   try {
-    // Verificamos si los parámetros existen en el cuerpo de la solicitud
     const { encryptedText, key, iv } = req.body;
-    console.log("encryptedText:", encryptedText);
-    console.log("key:", key);
-    console.log("iv:", iv);
 
-    // Verificar que todos los parámetros estén presentes
+    // Agregar logs para verificar los datos recibidos
+    console.log('encryptedText:', encryptedText);
+    console.log('key:', key);
+    console.log('iv:', iv);
+
+    // Verificar que los parámetros existan
     if (!encryptedText || !key || !iv) {
       return res.status(400).json({ error: 'encryptedText, key, and iv are required' });
     }
 
-    // Decodificar la clave y el IV desde Base64
+    // Decodificar los parámetros Base64
     const keyBuffer = Buffer.from(key, 'base64');
     const ivBuffer = Buffer.from(iv, 'base64');
 
