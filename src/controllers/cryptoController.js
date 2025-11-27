@@ -1,4 +1,5 @@
 const { sha256HashService, argon2HashService, aesEncryptService, aesDecryptService, chacha20EncryptService, chacha20DecryptService, rsaEncryptService, rsaDecryptService, signDsaService, verifyDsaService } = require('../services/cryptoService');
+const { generateRsaKeyPair,generateDsaKeyPair} = require('../services/cryptoService');
 
 // SHA-256 Hash
 const sha256Hash = (req, res) => {
@@ -32,32 +33,122 @@ const argon2Hash = async (req, res) => {
   }
 };
 
-// Endpoint AES-256-CBC (Cifrar texto)
+// AES-256-CBC Encrypt
 const aesEncrypt = (req, res) => {
+  try {
     const { text, key, iv } = req.body;
-    const encryptedText = aesEncryptService(text, key, iv); // Llama al servicio
+
+    // Verificar que la clave y el IV estén en Base64 y tengan la longitud correcta
+    if (Buffer.from(key, 'base64').length !== 32) {
+      return res.status(400).json({ error: 'La clave debe ser de 32 bytes (AES-256)' });
+    }
+    if (Buffer.from(iv, 'base64').length !== 16) {
+      return res.status(400).json({ error: 'El IV debe ser de 16 bytes' });
+    }
+
+    // Llamar al servicio para cifrar el texto
+    const encryptedText = aesEncryptService(text, key, iv);
+
+    // Retornar el texto cifrado en Base64
     res.json({ encrypted: encryptedText });
+  } catch (err) {
+    console.error('Error en el cifrado AES:', err);
+    res.status(500).json({ error: 'Error al cifrar el texto' });
+  }
 };
 
-// Endpoint AES-256-CBC (Descifrar texto)
+// AES-256-CBC Decrypt
 const aesDecrypt = (req, res) => {
+  try {
     const { encryptedText, key, iv } = req.body;
-    const decryptedText = aesDecryptService(encryptedText, key, iv); // Llama al servicio
+
+    // Verificar que la clave y el IV estén en Base64 y tengan la longitud correcta
+    if (Buffer.from(key, 'base64').length !== 32) {
+      return res.status(400).json({ error: 'La clave debe ser de 32 bytes (AES-256)' });
+    }
+    if (Buffer.from(iv, 'base64').length !== 16) {
+      return res.status(400).json({ error: 'El IV debe ser de 16 bytes' });
+    }
+
+    // Llamar al servicio para descifrar el texto
+    const decryptedText = aesDecryptService(encryptedText, key, iv);
+
+    // Retornar el texto descifrado
     res.json({ decrypted: decryptedText });
+  } catch (err) {
+    console.error('Error en el descifrado AES:', err);
+    res.status(500).json({ error: 'Error al descifrar el texto' });
+  }
 };
 
-// Endpoint ChaCha20 (Cifrar texto)
+// ChaCha20 Encrypt
 const chacha20Encrypt = (req, res) => {
+  try {
     const { text, key, nonce } = req.body;
-    const encryptedText = chacha20EncryptService(text, key, nonce); // Llama al servicio
+
+    // Verificar que la clave y el nonce estén en Base64 y tengan la longitud correcta
+    if (Buffer.from(key, 'base64').length !== 32) {
+      return res.status(400).json({ error: 'La clave debe ser de 32 bytes (ChaCha20)' });
+    }
+    if (Buffer.from(nonce, 'base64').length !== 12) {
+      return res.status(400).json({ error: 'El nonce debe ser de 12 bytes' });
+    }
+
+    // Llamar al servicio para cifrar el texto
+    const encryptedText = chacha20EncryptService(text, key, nonce);
+
+    // Retornar el texto cifrado en Base64
     res.json({ encrypted: encryptedText });
+  } catch (err) {
+    console.error('Error en el cifrado ChaCha20:', err);
+    res.status(500).json({ error: 'Error al cifrar el texto con ChaCha20' });
+  }
 };
 
-// Endpoint ChaCha20 (Descifrar texto)
+// ChaCha20 Decrypt
 const chacha20Decrypt = (req, res) => {
+  try {
     const { encryptedText, key, nonce } = req.body;
-    const decryptedText = chacha20DecryptService(encryptedText, key, nonce); // Llama al servicio
+
+    // Verificar que la clave y el nonce estén en Base64 y tengan la longitud correcta
+    if (Buffer.from(key, 'base64').length !== 32) {
+      return res.status(400).json({ error: 'La clave debe ser de 32 bytes (ChaCha20)' });
+    }
+    if (Buffer.from(nonce, 'base64').length !== 12) {
+      return res.status(400).json({ error: 'El nonce debe ser de 12 bytes' });
+    }
+
+    // Llamar al servicio para descifrar el texto
+    const decryptedText = chacha20DecryptService(encryptedText, key, nonce);
+
+    // Retornar el texto descifrado
     res.json({ decrypted: decryptedText });
+  } catch (err) {
+    console.error('Error en el descifrado ChaCha20:', err);
+    res.status(500).json({ error: 'Error al descifrar el texto con ChaCha20' });
+  }
+};
+
+// Generación de Claves RSA (2048 bits)
+const generateRsaKey = (req, res) => {
+  try {
+    const { publicKey, privateKey } = generateRsaKeyPair();
+    res.json({ publicKey: publicKey.toString('base64'), privateKey: privateKey.toString('base64') });
+  } catch (err) {
+    console.error('Error al generar las claves RSA:', err);
+    res.status(500).json({ error: 'Error al generar las claves RSA' });
+  }
+};
+
+// Generación de Claves DSA (1024 bits)
+const generateDsaKey = (req, res) => {
+  try {
+    const { publicKey, privateKey } = generateDsaKeyPair();
+    res.json({ publicKey: publicKey.toString('base64'), privateKey: privateKey.toString('base64') });
+  } catch (err) {
+    console.error('Error al generar las claves DSA:', err);
+    res.status(500).json({ error: 'Error al generar las claves DSA' });
+  }
 };
 
 // Endpoint RSA-OAEP (Cifrar con clave pública)
@@ -88,4 +179,4 @@ const verifyDsa = (req, res) => {
     res.json({ isValid });
 };
 
-module.exports = { sha256Hash, argon2Hash, aesEncrypt, aesDecrypt, chacha20Encrypt, chacha20Decrypt, rsaEncrypt, rsaDecrypt, signDsa, verifyDsa };
+module.exports = { sha256Hash, argon2Hash, aesEncrypt, aesDecrypt, chacha20Encrypt, chacha20Decrypt, rsaEncrypt, rsaDecrypt, signDsa, verifyDsa,  generateRsaKey, generateDsaKey };
