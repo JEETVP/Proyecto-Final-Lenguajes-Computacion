@@ -51,26 +51,31 @@ const aesDecryptService = (encryptedText, key, iv) => {
 };
 
 const chacha20EncryptService = (text, keyBase64, nonceBase64) => {
-  // Convertir la clave y el nonce de Base64 a Buffer
-  const key = Buffer.from(keyBase64, 'base64');
-  const nonce = Buffer.from(nonceBase64, 'base64');
+  try {
+    // Convertir la clave y el nonce de Base64 a Buffer
+    const key = Buffer.from(keyBase64, 'base64');
+    const nonce = Buffer.from(nonceBase64, 'base64');
 
-  // Verificar que la clave tenga 32 bytes y el nonce 12 bytes
-  if (key.length !== 32) {
-    throw new Error('La clave debe ser de 32 bytes (ChaCha20)');
+    // Verificar que la clave tenga 32 bytes y el nonce 12 bytes
+    if (key.length !== 32) {
+      throw new Error('La clave debe ser de 32 bytes (ChaCha20)');
+    }
+    if (nonce.length !== 12) {
+      throw new Error('El nonce debe ser de 12 bytes (ChaCha20)');
+    }
+
+    // Crear el cifrador para ChaCha20
+    const cipher = crypto.createCipheriv('chacha20', key, nonce);
+
+    // Cifrar el texto
+    let encrypted = cipher.update(text, 'utf8', 'base64');
+    encrypted += cipher.final('base64');
+
+    return encrypted;
+  } catch (err) {
+    console.error('Error al cifrar con ChaCha20:', err);
+    throw err;  // Lanzar el error para ser manejado en el controlador
   }
-  if (nonce.length !== 12) {
-    throw new Error('El nonce debe ser de 12 bytes (ChaCha20)');
-  }
-
-  // Crear el cifrador para ChaCha20
-  const cipher = crypto.createCipheriv('chacha20', key, nonce);
-
-  // Cifrar el texto
-  let encrypted = cipher.update(text, 'utf8', 'base64');
-  encrypted += cipher.final('base64');
-
-  return encrypted;
 };
 
 // ChaCha20 Decryption
