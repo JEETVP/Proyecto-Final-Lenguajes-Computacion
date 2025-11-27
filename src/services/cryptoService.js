@@ -1,3 +1,4 @@
+import chacha from 'chacha';
 const crypto = require('crypto');
 const argon2 = require('argon2');
 const chacha = require('chacha');
@@ -54,7 +55,7 @@ const aesDecryptService = (encryptedText, key, iv) => {
 // ChaCha20 Encrypt
 const chacha20EncryptService = (text, keyBase64, nonceBase64) => {
   try {
-    // Convertir clave y nonce de Base64 a Buffer
+    // Convertir la clave y el nonce de Base64 a Buffer
     const key = Buffer.from(keyBase64, 'base64');
     const nonce = Buffer.from(nonceBase64, 'base64');
 
@@ -66,8 +67,8 @@ const chacha20EncryptService = (text, keyBase64, nonceBase64) => {
       throw new Error('El nonce debe ser de 12 bytes (ChaCha20)');
     }
 
-    // Cifrar el texto con ChaCha20 usando la librería chacha
-    const cipher = chacha(key, nonce);
+    // Cifrar el texto con ChaCha20 utilizando la librería `chacha`
+    const cipher = chacha(key, nonce);  // Usamos la librería chacha para cifrar
     const encrypted = cipher.update(text, 'utf8', 'base64') + cipher.final('base64');
 
     return encrypted;
@@ -76,6 +77,7 @@ const chacha20EncryptService = (text, keyBase64, nonceBase64) => {
     throw err;
   }
 };
+
 
 // ChaCha20 Decryption
 const chacha20DecryptService = (encryptedText, key, nonce) => {
