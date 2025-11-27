@@ -121,7 +121,6 @@ const aesDecrypt = (req, res) => {
   }
 };
 
-// ChaCha20 Encrypt
 const chacha20Encrypt = (req, res) => {
   try {
     const { text, key, nonce } = req.body;
