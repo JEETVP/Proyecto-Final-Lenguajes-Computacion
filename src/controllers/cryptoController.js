@@ -76,9 +76,13 @@ const aesEncrypt = (req, res) => {
 
 const aesDecrypt = (req, res) => {
   try {
+    // Verificamos si los parámetros existen en el cuerpo de la solicitud
     const { encryptedText, key, iv } = req.body;
+    console.log("encryptedText:", encryptedText);
+    console.log("key:", key);
+    console.log("iv:", iv);
 
-    // Verificar si los parámetros existen
+    // Verificar que todos los parámetros estén presentes
     if (!encryptedText || !key || !iv) {
       return res.status(400).json({ error: 'encryptedText, key, and iv are required' });
     }
@@ -115,7 +119,6 @@ const aesDecrypt = (req, res) => {
     res.status(500).json({ error: 'Error al descifrar el texto con AES' });
   }
 };
-
 
 // ChaCha20 Encrypt
 const chacha20Encrypt = (req, res) => {
