@@ -130,6 +130,11 @@ const chacha20Encrypt = (req, res) => {
     const key = crypto.randomBytes(32);  // 32 bytes para ChaCha20
     const nonce = crypto.randomBytes(12); // 12 bytes para el nonce de ChaCha20
     
+    // Verificar que el nonce tenga la longitud correcta
+    if (nonce.length !== 12) {
+      return res.status(400).json({ error: 'El nonce debe ser de 12 bytes (ChaCha20)' });
+    }
+
     // Llamar al servicio para cifrar el texto
     const encryptedText = chacha20EncryptService(text, key, nonce);
 
