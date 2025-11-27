@@ -1,4 +1,3 @@
-import chacha from 'chacha';
 const crypto = require('crypto');
 const argon2 = require('argon2');
 const chacha = require('chacha');
