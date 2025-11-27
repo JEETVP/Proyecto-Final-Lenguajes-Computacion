@@ -46,16 +46,20 @@ const aesEncrypt = (req, res) => {
   try {
     const { text, key, iv } = req.body;
 
-    // Verificar que la clave y el IV estén en Base64 y tengan la longitud correcta
-    if (Buffer.from(key, 'base64').length !== 32) {
+    // Verificar que la clave esté en Base64 y tenga 32 bytes (256 bits)
+    const keyBuffer = Buffer.from(key, 'base64');
+    if (keyBuffer.length !== 32) {
       return res.status(400).json({ error: 'La clave debe ser de 32 bytes (AES-256)' });
     }
-    if (Buffer.from(iv, 'base64').length !== 16) {
+
+    // Verificar que el IV esté en Base64 y tenga 16 bytes
+    const ivBuffer = Buffer.from(iv, 'base64');
+    if (ivBuffer.length !== 16) {
       return res.status(400).json({ error: 'El IV debe ser de 16 bytes' });
     }
 
     // Llamar al servicio para cifrar el texto
-    const encryptedText = aesEncryptService(text, key, iv);
+    const encryptedText = aesEncryptService(text, keyBuffer, ivBuffer);
 
     // Retornar el texto cifrado en Base64
     res.json({ encrypted: encryptedText });

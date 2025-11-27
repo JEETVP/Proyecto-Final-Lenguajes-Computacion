@@ -26,9 +26,9 @@ const argon2HashService = async (password) => {
   }
 };
 
-// AES Encryption (256-CBC)
 const aesEncryptService = (text, key, iv) => {
-  const cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(key, 'base64'), Buffer.from(iv, 'base64'));
+  // Aquí key e iv ya son Buffer de 32 y 16 bytes, respectivamente, debido a que los decodificamos en el controller
+  const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);  // Ya no necesitamos Buffer.from
   let encrypted = cipher.update(text, 'utf8', 'base64');
   encrypted += cipher.final('base64');
   return encrypted;
