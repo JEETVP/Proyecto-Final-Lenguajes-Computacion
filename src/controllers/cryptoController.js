@@ -45,7 +45,7 @@ const argon2Hash = async (req, res) => {
 // AES-256-CBC Encrypt
 const aesEncrypt = (req, res) => {
   try {
-    const { text } = req.body; // Texto a cifrar
+    const { text } = req.body;  // Texto a cifrar
 
     // Generar clave de 32 bytes (256 bits) y IV de 16 bytes (128 bits)
     const key = crypto.randomBytes(32);  // 32 bytes para AES-256
