@@ -44,28 +44,32 @@ const argon2Hash = async (req, res) => {
 // AES-256-CBC Encrypt
 const aesEncrypt = (req, res) => {
   try {
-    const { text, key, iv } = req.body;
+    const { text } = req.body; // Texto a cifrar
 
-    // Verificar que la clave esté en Base64 y tenga 32 bytes (256 bits)
-    const keyBuffer = Buffer.from(key, 'base64');
-    if (keyBuffer.length !== 32) {
-      return res.status(400).json({ error: 'La clave debe ser de 32 bytes (AES-256)' });
-    }
+    // Generar clave de 32 bytes (256 bits) y IV de 16 bytes (128 bits)
+    const key = crypto.randomBytes(32);  // 32 bytes para AES-256
+    const iv = crypto.randomBytes(16);   // 16 bytes para el IV
 
-    // Verificar que el IV esté en Base64 y tenga 16 bytes
-    const ivBuffer = Buffer.from(iv, 'base64');
-    if (ivBuffer.length !== 16) {
-      return res.status(400).json({ error: 'El IV debe ser de 16 bytes' });
-    }
+    // Convertir la clave y el IV a Base64 para enviar en la respuesta y prueba en Postman
+    const keyBase64 = key.toString('base64');
+    const ivBase64 = iv.toString('base64');
+
+    // Verificar la longitud de la clave e IV
+    console.log('Generated Key:', keyBase64);
+    console.log('Generated IV:', ivBase64);
 
     // Llamar al servicio para cifrar el texto
-    const encryptedText = aesEncryptService(text, keyBuffer, ivBuffer);
+    const encryptedText = aesEncryptService(text, keyBase64, ivBase64);
 
-    // Retornar el texto cifrado en Base64
-    res.json({ encrypted: encryptedText });
+    // Retornar el texto cifrado en Base64 y las claves en Base64 para pruebas
+    res.json({
+      encrypted: encryptedText,
+      key: keyBase64,
+      iv: ivBase64
+    });
   } catch (err) {
     console.error('Error en el cifrado AES:', err);
-    res.status(500).json({ error: 'Error al cifrar el texto' });
+    res.status(500).json({ error: 'Error al cifrar el texto con AES' });
   }
 };
 
