@@ -148,6 +148,7 @@ const chacha20Encrypt = (req, res) => {
   }
 };
 
+
 // ChaCha20 Decrypt
 const chacha20Decrypt = (req, res) => {
   try {

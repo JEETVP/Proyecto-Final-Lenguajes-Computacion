@@ -66,7 +66,7 @@ const chacha20EncryptService = (text, keyBase64, nonceBase64) => {
       throw new Error('El nonce debe ser de 12 bytes (ChaCha20)');
     }
 
-    // Cifrar el texto con ChaCha20
+    // Cifrar el texto con ChaCha20 usando la librería chacha
     const cipher = chacha(key, nonce);
     const encrypted = cipher.update(text, 'utf8', 'base64') + cipher.final('base64');
 
