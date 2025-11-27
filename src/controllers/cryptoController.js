@@ -121,40 +121,24 @@ const aesDecrypt = (req, res) => {
   }
 };
 
+// ChaCha20 Encrypt
 const chacha20Encrypt = (req, res) => {
   try {
-    const { text, key, nonce } = req.body;
+    const { text } = req.body;
 
-    // Verificar que la clave y el nonce estén presentes
-    if (!key || !nonce) {
-      return res.status(400).json({ error: 'La clave y el nonce son requeridos' });
-    }
+    // Generar clave de 32 bytes (256 bits) y nonce de 12 bytes (96 bits)
+    const key = crypto.randomBytes(32);  // 32 bytes para ChaCha20
+    const nonce = crypto.randomBytes(12);   // 12 bytes para el nonce
 
-    // Decodificar la clave y el nonce de Base64
-    const keyBuffer = Buffer.from(key, 'base64');
-    const nonceBuffer = Buffer.from(nonce, 'base64');
-
-    // Log para verificar las longitudes de la clave y el nonce
-    console.log('Tamaño de la clave en bytes:', keyBuffer.length); // Para depurar la clave
-    console.log('Tamaño del nonce en bytes:', nonceBuffer.length); // Para depurar el nonce
-
-    // Verificar que la clave tenga 32 bytes
-    if (keyBuffer.length !== 32) {
-      console.error(`Tamaño de la clave en bytes: ${keyBuffer.length}`);  // Log para depuración
-      return res.status(400).json({ error: 'La clave debe ser de 32 bytes (ChaCha20)' });
-    }
-
-    // Verificar que el nonce tenga 12 bytes
-    if (nonceBuffer.length !== 12) {
-      console.error(`Tamaño del nonce en bytes: ${nonceBuffer.length}`);  // Log para depuración
-      return res.status(400).json({ error: 'El nonce debe ser de 12 bytes (ChaCha20)' });
-    }
+    // Convertir a Base64 para la respuesta
+    const keyBase64 = key.toString('base64');
+    const nonceBase64 = nonce.toString('base64');
 
     // Llamar al servicio para cifrar el texto
-    const encryptedText = chacha20EncryptService(text, keyBuffer, nonceBuffer);
+    const encryptedText = chacha20EncryptService(text, keyBase64, nonceBase64);
 
-    // Retornar el texto cifrado en Base64
-    res.json({ encrypted: encryptedText });
+    // Retornar el texto cifrado en Base64 junto con la clave y el nonce
+    res.json({ encrypted: encryptedText, key: keyBase64, nonce: nonceBase64 });
   } catch (err) {
     console.error('Error en el cifrado ChaCha20:', err);
     res.status(500).json({ error: 'Error al cifrar el texto con ChaCha20' });
