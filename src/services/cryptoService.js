@@ -70,7 +70,6 @@ const chacha20EncryptService = (text, key, nonce) => {
   }
 };
 
-
 // ChaCha20 Decryption
 const chacha20DecryptService = (encryptedText, key, nonce) => {
   const decipher = crypto.createDecipheriv('chacha20', Buffer.from(key, 'base64'), Buffer.from(nonce, 'base64'));
