@@ -121,90 +121,36 @@ const aesDecrypt = (req, res) => {
   }
 };
 
-// ChaCha20 Encrypt
-const chacha20Encrypt = (req, res) => {
+const encryptWithPublicKey = (req, res) => {
+  const { publicKeyBase64, data } = req.body;
   try {
-    const text = req.body.text; // Texto a cifrar
-    
-    // Generar una clave de 32 bytes (256 bits) y un IV de 12 bytes (96 bits) de manera aleatoria
-    const key = crypto.randomBytes(32);  // 32 bytes para ChaCha20
-    const nonce = crypto.randomBytes(12); // 12 bytes para el nonce de ChaCha20
-    
-    // Verificar que el nonce tenga la longitud correcta
-    if (nonce.length !== 12) {
-      return res.status(400).json({ error: 'El nonce debe ser de 12 bytes (ChaCha20)' });
-    }
-
-    // Llamar al servicio para cifrar el texto
-    const encryptedText = chacha20EncryptService(text, key, nonce);
-
-    // Retornar el texto cifrado junto con la clave y el nonce generados en Base64
-    res.json({
-      encrypted: encryptedText,
-      key: key.toString('base64'),
-      nonce: nonce.toString('base64')
-    });
-  } catch (err) {
-    console.error('Error al cifrar con ChaCha20:', err);
-    res.status(500).json({ error: 'Error al cifrar el texto con ChaCha20' });
+    const encryptedData = cryptoService.encryptWithPublicKey(publicKeyBase64, data);
+    res.json({ encryptedData });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al cifrar el dato' });
   }
 };
 
-// ChaCha20 Decrypt
-const chacha20Decrypt = (req, res) => {
+// Endpoint para descifrar con clave privada
+const decryptWithPrivateKey = (req, res) => {
+  const { privateKeyBase64, encryptedDataBase64 } = req.body;
   try {
-    const { encryptedText, key, nonce } = req.body;
-
-    // Verificar que la clave y el nonce estén en Base64 y tengan la longitud correcta
-    if (Buffer.from(key, 'base64').length !== 32) {
-      return res.status(400).json({ error: 'La clave debe ser de 32 bytes (ChaCha20)' });
-    }
-    if (Buffer.from(nonce, 'base64').length !== 12) {
-      return res.status(400).json({ error: 'El nonce debe ser de 12 bytes' });
-    }
-
-    // Llamar al servicio para descifrar el texto
-    const decryptedText = chacha20DecryptService(encryptedText, key, nonce);
-
-    // Retornar el texto descifrado
-    res.json({ decrypted: decryptedText });
-  } catch (err) {
-    console.error('Error en el descifrado ChaCha20:', err);
-    res.status(500).json({ error: 'Error al descifrar el texto con ChaCha20' });
+    const decryptedData = cryptoService.decryptWithPrivateKey(privateKeyBase64, encryptedDataBase64);
+    res.json({ decryptedData });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al descifrar el dato' });
   }
 };
 
-// Generación de Claves RSA (2048 bits)
-const generateRsaKey = (req, res) => {
-  try {
-    const { publicKey, privateKey } = generateRsaKeyPair();
-    res.json({ publicKey: publicKey.toString('base64'), privateKey: privateKey.toString('base64') });
-  } catch (err) {
-    console.error('Error al generar las claves RSA:', err);
-    res.status(500).json({ error: 'Error al generar las claves RSA' });
-  }
-};
 
-// Generación de Claves DSA (1024 bits)
-const generateDsaKey = (req, res) => {
-  try {
-    const { publicKey, privateKey } = generateDsaKeyPair();
-    res.json({ publicKey: publicKey.toString('base64'), privateKey: privateKey.toString('base64') });
-  } catch (err) {
-    console.error('Error al generar las claves DSA:', err);
-    res.status(500).json({ error: 'Error al generar las claves DSA' });
-  }
-};
 
 module.exports = {
   sha256Hash,
   argon2Hash,
   aesEncrypt,
   aesDecrypt,
-  chacha20Encrypt,
-  chacha20Decrypt,
-  generateRsaKey,
-  generateDsaKey
+  encryptWithPublicKey,
+  decryptWithPrivateKey
 };
 
 /*const rsaEncrypt = (req, res) => {

@@ -51,89 +51,10 @@ const aesDecryptService = (encryptedText, key, iv) => {
   return decrypted;  // Retorna el texto descifrado en UTF-8
 };
 
-// Función para cifrar con ChaCha20
-const chacha20EncryptService = (text, key, nonce) => {
-  try {
-    // Cifrar el texto con ChaCha20 utilizando crypto
-    const cipher = crypto.createCipheriv('chacha20', key, nonce);
-    let encrypted = cipher.update(text, 'utf8', 'base64');
-    encrypted += cipher.final('base64');
-
-    return encrypted;
-  } catch (err) {
-    console.error('Error al cifrar con ChaCha20:', err);
-    throw err;
-  }
-};
-
-// ChaCha20 Decryption
-const chacha20DecryptService = (encryptedText, key, nonce) => {
-  const decipher = crypto.createDecipheriv('chacha20', Buffer.from(key, 'base64'), Buffer.from(nonce, 'base64'));
-  let decrypted = decipher.update(encryptedText, 'base64', 'utf8');
-  decrypted += decipher.final('utf8');
-  return decrypted;
-};
-
-// RSA Encryption (Public Key)
-const rsaEncryptService = (text, publicKey) => {
-  const encrypted = publicEncrypt(
-    {
-      key: Buffer.from(publicKey, 'base64'),
-      padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
-    },
-    Buffer.from(text, 'utf8')
-  );
-  return encrypted.toString('base64');
-};
-
-// RSA Decryption (Private Key)
-const rsaDecryptService = (encryptedText, privateKey) => {
-  const decrypted = privateDecrypt(
-    {
-      key: Buffer.from(privateKey, 'base64'),
-      padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
-    },
-    Buffer.from(encryptedText, 'base64')
-  );
-  return decrypted.toString('utf8');
-};
-
-// DSA Signing (Private Key)
-const signDsaService = (message, privateKey) => {
-  const sign = createSign('SHA256');
-  sign.update(message);
-  const signature = sign.sign(Buffer.from(privateKey, 'base64'), 'base64');
-  return signature;
-};
-
-// DSA Verification (Public Key)
-const verifyDsaService = (message, signature, publicKey) => {
-  const verify = createVerify('SHA256');
-  verify.update(message);
-  const isValid = verify.verify(Buffer.from(publicKey, 'base64'), Buffer.from(signature, 'base64'));
-  return isValid;
-};
-
-// RSA Key Pair Generation
-const generateRsaKeyPair = () => {
-  const { publicKey, privateKey } = generateKeyPairSync('rsa', {
-    modulusLength: 2048, // Size of the RSA key in bits
-    publicKeyEncoding: {
-      type: 'pkcs1',
-      format: 'pem',
-    },
-    privateKeyEncoding: {
-      type: 'pkcs1',
-      format: 'pem',
-    },
-  });
-  return { publicKey, privateKey };
-};
-
-// DSA Key Pair Generation
-const generateDsaKeyPair = () => {
-  const { publicKey, privateKey } = generateKeyPairSync('dsa', {
-    modulusLength: 1024, // Size of the DSA key in bits
+// Generar claves RSA de 2048 bits
+const generateRSAKeyPair = () => {
+  return crypto.generateKeyPairSync('rsa', {
+    modulusLength: 2048,
     publicKeyEncoding: {
       type: 'spki',
       format: 'pem',
@@ -143,7 +64,33 @@ const generateDsaKeyPair = () => {
       format: 'pem',
     },
   });
-  return { publicKey, privateKey };
+};
+
+// Cifrar con clave pública usando RSA-OAEP
+const encryptWithPublicKey = (publicKeyBase64, data) => {
+  const publicKey = Buffer.from(publicKeyBase64, 'base64');
+  const encryptedData = crypto.publicEncrypt(
+    {
+      key: publicKey,
+      padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
+    },
+    Buffer.from(data)
+  );
+  return encryptedData.toString('base64');
+};
+
+// Descifrar con clave privada usando RSA-OAEP
+const decryptWithPrivateKey = (privateKeyBase64, encryptedDataBase64) => {
+  const privateKey = Buffer.from(privateKeyBase64, 'base64');
+  const encryptedData = Buffer.from(encryptedDataBase64, 'base64');
+  const decryptedData = crypto.privateDecrypt(
+    {
+      key: privateKey,
+      padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
+    },
+    encryptedData
+  );
+  return decryptedData.toString();
 };
 
 module.exports = {
@@ -151,12 +98,7 @@ module.exports = {
   argon2HashService,
   aesEncryptService,
   aesDecryptService,
-  chacha20EncryptService,
-  chacha20DecryptService,
-  rsaEncryptService,
-  rsaDecryptService,
-  signDsaService,
-  verifyDsaService,
-  generateRsaKeyPair,
-  generateDsaKeyPair,
+  generateRSAKeyPair,
+  encryptWithPublicKey,
+  decryptWithPrivateKey,
 };
