@@ -120,6 +120,7 @@ const aesDecrypt = (req, res) => {
     res.status(500).json({ error: 'Error al descifrar el texto con AES' });
   }
 };
+
 const chacha20Encrypt = (req, res) => {
   try {
     const { text, key, nonce } = req.body;
@@ -132,6 +133,10 @@ const chacha20Encrypt = (req, res) => {
     // Decodificar la clave y el nonce de Base64
     const keyBuffer = Buffer.from(key, 'base64');
     const nonceBuffer = Buffer.from(nonce, 'base64');
+
+    // Log para verificar las longitudes de la clave y el nonce
+    console.log('Tamaño de la clave en bytes:', keyBuffer.length); // Para depurar la clave
+    console.log('Tamaño del nonce en bytes:', nonceBuffer.length); // Para depurar el nonce
 
     // Verificar que la clave tenga 32 bytes
     if (keyBuffer.length !== 32) {
