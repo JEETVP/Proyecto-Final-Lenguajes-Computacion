@@ -1,0 +1,18 @@
+{
+  "name": "proyecto-final-lenguajes-computacion",
+  "version": "1.0.0",
+  "description": "Proyecto Final de backend bien criptográfico de lenguajes de computacion",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "argon2": "^0.44.0",
+    "body-parser": "^2.2.1",
+    "crypto-js": "^4.2.0",
+    "express": "^5.1.0"
+  }
+}
