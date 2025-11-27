@@ -74,6 +74,7 @@ const aesEncrypt = (req, res) => {
   }
 };
 
+// AES-256-CBC Decrypt
 const aesDecrypt = (req, res) => {
   try {
     const { encryptedText, key, iv } = req.body;
@@ -143,7 +144,6 @@ const decryptWithPrivateKey = (req, res) => {
   }
 };
 
-
 module.exports = {
   sha256Hash,
   argon2Hash,
@@ -152,31 +152,4 @@ module.exports = {
   encryptWithPublicKey,
   decryptWithPrivateKey
 };
-
-/*const rsaEncrypt = (req, res) => {
-    const { text, publicKey } = req.body;
-    const encryptedText = rsaEncryptService(text, publicKey); // Llama al servicio
-    res.json({ encrypted: encryptedText });
-};
-
-// Endpoint RSA-OAEP (Descifrar con clave privada)
-const rsaDecrypt = (req, res) => {
-    const { encryptedText, privateKey } = req.body;
-    const decryptedText = rsaDecryptService(encryptedText, privateKey); // Llama al servicio
-    res.json({ decrypted: decryptedText });
-};
-
-// Endpoint DSA (Firmar mensaje con clave privada)
-const signDsa = (req, res) => {
-    const { message, privateKey } = req.body;
-    const signature = signDsaService(message, privateKey); // Llama al servicio
-    res.json({ signature });
-};
-
-// Endpoint DSA (Verificar firma con clave pública)
-const verifyDsa = (req, res) => {
-    const { message, signature, publicKey } = req.body;
-    const isValid = verifyDsaService(message, signature, publicKey); // Llama al servicio
-    res.json({ isValid });
-};*/
 
