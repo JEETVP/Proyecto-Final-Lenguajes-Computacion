@@ -8,6 +8,7 @@ const {
   sha256HashService,
   argon2HashService 
 } = require('../services/cryptoService');
+const crypto = require('crypto');
 
 // SHA-256 Hash
 const sha256Hash = (req, res) => {
