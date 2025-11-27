@@ -52,20 +52,8 @@ const aesDecryptService = (encryptedText, key, iv) => {
 };
 
 // Función para cifrar con ChaCha20
-const chacha20EncryptService = (text, keyBase64, nonceBase64) => {
+const chacha20EncryptService = (text, key, nonce) => {
   try {
-    // Convertir la clave y el nonce de Base64 a Buffer
-    const key = Buffer.from(keyBase64, 'base64');
-    const nonce = Buffer.from(nonceBase64, 'base64');
-
-    // Verificar que la clave tenga 32 bytes y el nonce tenga 12 bytes
-    if (key.length !== 32) {
-      throw new Error('La clave debe ser de 32 bytes (ChaCha20)');
-    }
-    if (nonce.length !== 12) {
-      throw new Error('El nonce debe ser de 12 bytes (ChaCha20)');
-    }
-
     // Cifrar el texto con ChaCha20 utilizando crypto
     const cipher = crypto.createCipheriv('chacha20', key, nonce);
     let encrypted = cipher.update(text, 'utf8', 'base64');
@@ -77,6 +65,7 @@ const chacha20EncryptService = (text, keyBase64, nonceBase64) => {
     throw err;
   }
 };
+
 
 // ChaCha20 Decryption
 const chacha20DecryptService = (encryptedText, key, nonce) => {
