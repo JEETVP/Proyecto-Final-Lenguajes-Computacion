@@ -121,9 +121,6 @@ const aesDecrypt = (req, res) => {
   }
 };
 
-// ChaCha20 Encrypt
-const crypto = require('crypto');
-const { chacha20EncryptService } = require('../services/cryptoService');
 
 // ChaCha20 Encrypt
 const chacha20Encrypt = (req, res) => {
