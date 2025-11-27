@@ -1,14 +1,41 @@
 const { 
+  sha256HashService, 
+  argon2HashService, 
   aesEncryptService, 
   aesDecryptService, 
-  chacha20EncryptService, 
-  chacha20DecryptService, 
-  generateRsaKeyPair, 
-  generateDsaKeyPair, 
-  sha256HashService,
-  argon2HashService 
+  generateRSAKeyPair, 
+  encryptWithPublicKey, 
+  decryptWithPrivateKey 
 } = require('../services/cryptoService');
+
 const crypto = require('crypto');
+
+// Generar un par de claves RSA automáticamente
+const generateRSAKeyPairSync = () => {
+  try {
+    const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
+      modulusLength: 2048,
+      publicKeyEncoding: {
+        type: 'spki',
+        format: 'pem',
+      },
+      privateKeyEncoding: {
+        type: 'pkcs8',
+        format: 'pem',
+      },
+    });
+    return {
+      publicKey: publicKey.toString('base64'),  // Codificada en base64 para el envío en JSON
+      privateKey: privateKey.toString('base64')  // Codificada en base64
+    };
+  } catch (err) {
+    console.error('Error generando claves RSA:', err);
+    throw new Error('Error al generar las claves RSA');
+  }
+};
+
+// Claves RSA generadas y codificadas en base64
+const { publicKeyBase64, privateKeyBase64 } = generateRSAKeyPairSync();
 
 // SHA-256 Hash
 const sha256Hash = (req, res) => {
@@ -122,25 +149,27 @@ const aesDecrypt = (req, res) => {
   }
 };
 
-// Endpoint para cifrar con clave pública
+// Endpoint para cifrar con clave pública (RSA)
 const encryptWithPublicKey = (req, res) => {
-  const { publicKeyBase64, data } = req.body;
+  const { data } = req.body;
   try {
-    const encryptedData = cryptoService.encryptWithPublicKey(publicKeyBase64, data);
+    // Usar la clave pública precargada
+    const encryptedData = encryptWithPublicKey(publicKeyBase64, data);
     res.json({ encryptedData });
   } catch (error) {
-    res.status(500).json({ error: 'Error al cifrar el dato' });
+    res.status(500).json({ error: 'Error al cifrar el dato con RSA' });
   }
 };
 
-// Endpoint para descifrar con clave privada
+// Endpoint para descifrar con clave privada (RSA)
 const decryptWithPrivateKey = (req, res) => {
-  const { privateKeyBase64, encryptedDataBase64 } = req.body;
+  const { encryptedDataBase64 } = req.body;
   try {
-    const decryptedData = cryptoService.decryptWithPrivateKey(privateKeyBase64, encryptedDataBase64);
+    // Usar la clave privada precargada
+    const decryptedData = decryptWithPrivateKey(privateKeyBase64, encryptedDataBase64);
     res.json({ decryptedData });
   } catch (error) {
-    res.status(500).json({ error: 'Error al descifrar el dato' });
+    res.status(500).json({ error: 'Error al descifrar el dato con RSA' });
   }
 };
 
