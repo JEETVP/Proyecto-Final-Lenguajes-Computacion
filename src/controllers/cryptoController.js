@@ -1,11 +1,13 @@
-const {
-  aesEncrypt,
-  aesDecrypt,
-  chacha20Encrypt,
-  chacha20Decrypt,
-  generateRsaKey,  
-  generateDsaKey
-} = require('../controllers/cryptoController');
+const { 
+  aesEncryptService, 
+  aesDecryptService, 
+  chacha20EncryptService, 
+  chacha20DecryptService, 
+  generateRsaKeyPair, 
+  generateDsaKeyPair, 
+  sha256HashService,
+  argon2HashService 
+} = require('../services/cryptoService');
 
 // SHA-256 Hash
 const sha256Hash = (req, res) => {
@@ -157,6 +159,17 @@ const generateDsaKey = (req, res) => {
   }
 };
 
+module.exports = {
+  sha256Hash,
+  argon2Hash,
+  aesEncrypt,
+  aesDecrypt,
+  chacha20Encrypt,
+  chacha20Decrypt,
+  generateRsaKey,
+  generateDsaKey
+};
+
 /*const rsaEncrypt = (req, res) => {
     const { text, publicKey } = req.body;
     const encryptedText = rsaEncryptService(text, publicKey); // Llama al servicio
@@ -184,11 +197,3 @@ const verifyDsa = (req, res) => {
     res.json({ isValid });
 };*/
 
-module.exports = {
-  aesEncrypt,
-  aesDecrypt,
-  chacha20Encrypt,
-  chacha20Decrypt,
-  generateRsaKey,  
-  generateDsaKey
-};

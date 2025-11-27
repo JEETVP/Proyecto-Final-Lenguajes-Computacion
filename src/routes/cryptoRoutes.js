@@ -21,9 +21,9 @@ router.post('/decrypt/chacha20', chacha20Decrypt);  // Descifrar con ChaCha20
 router.post('/generate/rsa', generateRsaKey);  // Generar clave RSA
 router.post('/generate/dsa', generateDsaKey);  // Generar clave DSA
 
-router.post('/encrypt/rsa', rsaEncrypt);
+/*router.post('/encrypt/rsa', rsaEncrypt);
 router.post('/decrypt/rsa', rsaDecrypt);
 router.post('/sign/dsa', signDsa);
-router.post('/verify/dsa', verifyDsa);
+router.post('/verify/dsa', verifyDsa);*/
 
 module.exports = router;
