@@ -74,10 +74,14 @@ const aesEncrypt = (req, res) => {
   }
 };
 
-// AES-256-CBC Decrypt
 const aesDecrypt = (req, res) => {
   try {
     const { encryptedText, key, iv } = req.body;
+
+    // Verificar si los parámetros existen
+    if (!encryptedText || !key || !iv) {
+      return res.status(400).json({ error: 'encryptedText, key, and iv are required' });
+    }
 
     // Verificar que la clave esté en Base64 y tenga 32 bytes (256 bits)
     const keyBuffer = Buffer.from(key, 'base64');
@@ -92,7 +96,12 @@ const aesDecrypt = (req, res) => {
     }
 
     // Verificar que el texto cifrado esté en Base64
-    const encryptedBuffer = Buffer.from(encryptedText, 'base64');
+    let encryptedBuffer;
+    try {
+      encryptedBuffer = Buffer.from(encryptedText, 'base64');
+    } catch (error) {
+      return res.status(400).json({ error: 'Texto cifrado no válido (debe estar en Base64)' });
+    }
 
     // Llamar al servicio para descifrar el texto
     const decryptedText = aesDecryptService(encryptedBuffer, keyBuffer, ivBuffer);
