@@ -123,32 +123,27 @@ const aesDecrypt = (req, res) => {
 
 // ChaCha20 Encrypt
 const chacha20Encrypt = (req, res) => {
-try {
-const { text } = req.body;
+  try {
+    const { text, key, nonce } = req.body;
 
-// Generar clave de 32 bytes (256 bits) y nonce de 12 bytes (96 bits)
-const key = crypto.randomBytes(32);  // 32 bytes para ChaCha20
-const nonce = crypto.randomBytes(12);   // 12 bytes para el nonce
+    // Verificar que la clave y el nonce estén en Base64 y tengan la longitud correcta
+    if (Buffer.from(key, 'base64').length !== 32) {
+      return res.status(400).json({ error: 'La clave debe ser de 32 bytes (ChaCha20)' });
+    }
+    if (Buffer.from(nonce, 'base64').length !== 12) {
+      return res.status(400).json({ error: 'El nonce debe ser de 12 bytes' });
+    }
 
-// Convertir a Base64 para la respuesta
-const keyBase64 = key.toString('base64');
-const nonceBase64 = nonce.toString('base64');
+    // Llamar al servicio para cifrar el texto
+    const encryptedText = chacha20EncryptService(text, key, nonce);
 
-console.log(`Generated Key: ${keyBase64}`);
-console.log(`Generated Nonce: ${nonceBase64}`);
-
-// Llamar al servicio para cifrar el texto
-const encryptedText = chacha20EncryptService(text, keyBase64, nonceBase64);
-
-// Retornar el texto cifrado en Base64 junto con la clave y el nonce
-res.json({ encrypted: encryptedText, key: keyBase64, nonce: nonceBase64 });
-
-
-} catch (err) {
-console.error('Error en el cifrado ChaCha20:', err);
-res.status(500).json({ error: 'Error al cifrar el texto con ChaCha20' });
-}
-}
+    // Retornar el texto cifrado en Base64
+    res.json({ encrypted: encryptedText });
+  } catch (err) {
+    console.error('Error en el cifrado ChaCha20:', err);
+    res.status(500).json({ error: 'Error al cifrar el texto con ChaCha20' });
+  }
+};
 
 // ChaCha20 Decrypt
 const chacha20Decrypt = (req, res) => {
