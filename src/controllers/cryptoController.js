@@ -83,14 +83,16 @@ const aesDecrypt = (req, res) => {
       return res.status(400).json({ error: 'encryptedText, key, and iv are required' });
     }
 
-    // Verificar que la clave esté en Base64 y tenga 32 bytes (256 bits)
+    // Decodificar la clave y el IV desde Base64
     const keyBuffer = Buffer.from(key, 'base64');
+    const ivBuffer = Buffer.from(iv, 'base64');
+
+    // Verificar que la clave tenga 32 bytes (256 bits)
     if (keyBuffer.length !== 32) {
       return res.status(400).json({ error: 'La clave debe ser de 32 bytes (AES-256)' });
     }
 
-    // Verificar que el IV esté en Base64 y tenga 16 bytes
-    const ivBuffer = Buffer.from(iv, 'base64');
+    // Verificar que el IV tenga 16 bytes
     if (ivBuffer.length !== 16) {
       return res.status(400).json({ error: 'El IV debe ser de 16 bytes' });
     }
@@ -113,6 +115,7 @@ const aesDecrypt = (req, res) => {
     res.status(500).json({ error: 'Error al descifrar el texto con AES' });
   }
 };
+
 
 // ChaCha20 Encrypt
 const chacha20Encrypt = (req, res) => {
