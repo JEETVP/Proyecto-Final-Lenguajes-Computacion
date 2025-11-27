@@ -79,22 +79,29 @@ const aesDecrypt = (req, res) => {
   try {
     const { encryptedText, key, iv } = req.body;
 
-    // Verificar que la clave y el IV estén en Base64 y tengan la longitud correcta
-    if (Buffer.from(key, 'base64').length !== 32) {
+    // Verificar que la clave esté en Base64 y tenga 32 bytes (256 bits)
+    const keyBuffer = Buffer.from(key, 'base64');
+    if (keyBuffer.length !== 32) {
       return res.status(400).json({ error: 'La clave debe ser de 32 bytes (AES-256)' });
     }
-    if (Buffer.from(iv, 'base64').length !== 16) {
+
+    // Verificar que el IV esté en Base64 y tenga 16 bytes
+    const ivBuffer = Buffer.from(iv, 'base64');
+    if (ivBuffer.length !== 16) {
       return res.status(400).json({ error: 'El IV debe ser de 16 bytes' });
     }
 
+    // Verificar que el texto cifrado esté en Base64
+    const encryptedBuffer = Buffer.from(encryptedText, 'base64');
+
     // Llamar al servicio para descifrar el texto
-    const decryptedText = aesDecryptService(encryptedText, key, iv);
+    const decryptedText = aesDecryptService(encryptedBuffer, keyBuffer, ivBuffer);
 
     // Retornar el texto descifrado
     res.json({ decrypted: decryptedText });
   } catch (err) {
     console.error('Error en el descifrado AES:', err);
-    res.status(500).json({ error: 'Error al descifrar el texto' });
+    res.status(500).json({ error: 'Error al descifrar el texto con AES' });
   }
 };
 

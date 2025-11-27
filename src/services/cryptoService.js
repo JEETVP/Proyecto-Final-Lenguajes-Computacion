@@ -39,12 +39,15 @@ const aesEncryptService = (text, key, iv) => {
   return encrypted;  // Retorna el texto cifrado en Base64
 };
 
-// AES Decryption (256-CBC)
+// AES-256-CBC Decrypt
 const aesDecryptService = (encryptedText, key, iv) => {
-  const decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(key, 'base64'), Buffer.from(iv, 'base64'));
+  const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
+
+  // Descifrar el texto
   let decrypted = decipher.update(encryptedText, 'base64', 'utf8');
   decrypted += decipher.final('utf8');
-  return decrypted;
+
+  return decrypted;  // Retorna el texto descifrado en UTF-8
 };
 
 // ChaCha20 Encryption
