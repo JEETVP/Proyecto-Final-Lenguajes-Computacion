@@ -1,17 +1,35 @@
 const { sha256HashService, argon2HashService, aesEncryptService, aesDecryptService, chacha20EncryptService, chacha20DecryptService, rsaEncryptService, rsaDecryptService, signDsaService, verifyDsaService } = require('../services/cryptoService');
 
-// Endpoint SHA-256 (Generar un hash del texto de entrada)
+// SHA-256 Hash
 const sha256Hash = (req, res) => {
-    const text = req.body.text;
-    const hash = sha256HashService(text); // Llama al servicio
+  try {
+    const text = req.body.text;  // Texto a ser hasheado
+    if (!text) {
+      return res.status(400).json({ error: 'El texto es requerido' });
+    }
+    // Llamar al servicio para generar el hash SHA-256
+    const hash = sha256HashService(text);
     res.json({ hash });
+  } catch (err) {
+    console.error('Error al generar el hash SHA-256:', err);
+    res.status(500).json({ error: 'Error al generar el hash SHA-256' });
+  }
 };
 
-// Endpoint Argon2 (Generar un hash de la contraseña)
-const argon2Hash = (req, res) => {
-    const password = req.body.password;
-    const hash = argon2HashService(password); // Llama al servicio
+// Argon2 Hash
+const argon2Hash = async (req, res) => {
+  try {
+    const password = req.body.password;  // Contraseña a ser hasheada
+    if (!password) {
+      return res.status(400).json({ error: 'La contraseña es requerida' });
+    }
+    // Llamar al servicio para generar el hash Argon2
+    const hash = await argon2HashService(password);
     res.json({ hash });
+  } catch (err) {
+    console.error('Error al generar el hash con Argon2:', err);
+    res.status(500).json({ error: 'Error al generar el hash con Argon2' });
+  }
 };
 
 // Endpoint AES-256-CBC (Cifrar texto)

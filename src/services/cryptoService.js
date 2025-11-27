@@ -4,14 +4,26 @@ const { publicEncrypt, privateDecrypt, generateKeyPairSync, createSign, createVe
 
 // SHA-256 Hash
 const sha256HashService = (text) => {
-  const hash = crypto.createHash('sha256').update(text).digest('hex');
-  return hash;
+  try {
+    // Generar hash SHA-256 del texto
+    const hash = crypto.createHash('sha256').update(text).digest('hex');
+    return hash;
+  } catch (err) {
+    console.error('Error en el servicio SHA-256:', err);
+    throw new Error('Error al generar el hash SHA-256');
+  }
 };
 
 // Argon2 Hash
 const argon2HashService = async (password) => {
-  const hash = await argon2.hash(password);
-  return hash;
+  try {
+    // Generar hash usando Argon2
+    const hash = await argon2.hash(password);
+    return hash;
+  } catch (err) {
+    console.error('Error en el servicio Argon2:', err);
+    throw new Error('Error al generar el hash Argon2');
+  }
 };
 
 // AES Encryption (256-CBC)
