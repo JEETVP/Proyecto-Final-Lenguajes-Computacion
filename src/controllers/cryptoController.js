@@ -6,7 +6,7 @@ const {
 } = require('../services/cryptoService');
 const chacha20Service = require('../services/cryptoService');
 const { rsaEncrypt, rsaDecrypt, getPublicKeyPem } = require('../services/cryptoService');
-const {getDsaPublicKeyPem,signWithDsa,verifyWithDsa} = require('../services/cryptoService');
+const { getDsaPublicKeyPem, signWithDsa, verifyWithDsa } = require('../services/cryptoService');
 
 const crypto = require('crypto');
 
@@ -387,4 +387,11 @@ module.exports = {
   argon2Hash,
   aesEncrypt,
   aesDecrypt,
+  chacha20Encrypt: exports.chacha20Encrypt,
+  chacha20Decrypt: exports.chacha20Decrypt,
+  encryptRSA: exports.encryptRSA,
+  decryptRSA: exports.decryptRSA,
+  signDsa: exports.signDsa,
+  verifyDsa: exports.verifyDsa,
 };
+

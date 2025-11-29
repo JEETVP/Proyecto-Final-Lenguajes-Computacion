@@ -361,6 +361,15 @@ module.exports = {
   argon2HashService,
   aesEncryptService,
   aesDecryptService,
+  encryptChaCha20,
+  decryptChaCha20,
+  rsaEncrypt,
+  rsaDecrypt,
+  getPublicKeyPem,
+  getDsaPublicKeyPem,
+  signWithDsa,
+  verifyWithDsa,
 };
+
 
 
