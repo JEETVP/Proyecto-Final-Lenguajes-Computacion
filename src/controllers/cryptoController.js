@@ -4,7 +4,7 @@ const {
   aesEncryptService, 
   aesDecryptService, 
 } = require('../services/cryptoService');
-const chacha20Service = require('../service/cryptoService');
+const chacha20Service = require('../services/cryptoService');
 const { rsaEncrypt, rsaDecrypt, getPublicKeyPem } = require('../services/cryptoService');
 const {getDsaPublicKeyPem,signWithDsa,verifyWithDsa} = require('../services/cryptoService');
 
