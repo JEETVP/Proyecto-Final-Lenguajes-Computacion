@@ -59,71 +59,12 @@ const aesDecryptService = (encryptedText, key, iv) => {
   }
 };
 
-// Generar claves RSA de 2048 bits
-const generateRSAKeyPair = () => {
-  try {
-    return crypto.generateKeyPairSync('rsa', {
-      modulusLength: 2048,
-      publicKeyEncoding: {
-        type: 'spki',
-        format: 'pem',
-      },
-      privateKeyEncoding: {
-        type: 'pkcs8',
-        format: 'pem',
-      },
-    });
-  } catch (err) {
-    console.error('Error al generar las claves RSA:', err);
-    throw new Error('Error al generar las claves RSA');
-  }
-};
-
-// Cifrar con clave pública usando RSA-OAEP
-const encryptWithPublicKey = (publicKeyBase64, data) => {
-  try {
-    const publicKey = Buffer.from(publicKeyBase64, 'base64');
-    const encryptedData = crypto.publicEncrypt(
-      {
-        key: publicKey,
-        padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
-      },
-      Buffer.from(data)
-    );
-    return encryptedData.toString('base64');
-  } catch (err) {
-    console.error('Error al cifrar con clave pública RSA:', err);
-    throw new Error('Error al cifrar con clave pública RSA');
-  }
-};
-
-// Descifrar con clave privada usando RSA-OAEP
-const decryptWithPrivateKey = (privateKeyBase64, encryptedDataBase64) => {
-  try {
-    const privateKey = Buffer.from(privateKeyBase64, 'base64');
-    const encryptedData = Buffer.from(encryptedDataBase64, 'base64');
-    const decryptedData = crypto.privateDecrypt(
-      {
-        key: privateKey,
-        padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
-      },
-      encryptedData
-    );
-    return decryptedData.toString();
-  } catch (err) {
-    console.error('Error al descifrar con clave privada RSA:', err);
-    throw new Error('Error al descifrar con clave privada RSA');
-  }
-};
 
 module.exports = {
   sha256HashService,
   argon2HashService,
   aesEncryptService,
   aesDecryptService,
-  generateRSAKeyPair,
-  encryptWithPublicKey,
-  decryptWithPrivateKey,
 };
 
 

@@ -148,35 +148,10 @@ const aesDecrypt = (req, res) => {
   }
 };
 
-// Endpoint para cifrar con clave pública (RSA)
-const encryptWithPublicKey = (req, res) => {
-  const { data } = req.body;
-  try {
-    // Usar la clave pública precargada
-    const encryptedData = encryptWithPublicKeyService(publicKeyBase64, data);
-    res.json({ encryptedData });
-  } catch (error) {
-    res.status(500).json({ error: 'Error al cifrar el dato con RSA' });
-  }
-};
-
-// Endpoint para descifrar con clave privada (RSA)
-const decryptWithPrivateKey = (req, res) => {
-  const { encryptedDataBase64 } = req.body;
-  try {
-    // Usar la clave privada precargada
-    const decryptedData = decryptWithPrivateKeyService(privateKeyBase64, encryptedDataBase64);
-    res.json({ decryptedData });
-  } catch (error) {
-    res.status(500).json({ error: 'Error al descifrar el dato con RSA' });
-  }
-};
 
 module.exports = {
   sha256Hash,
   argon2Hash,
   aesEncrypt,
   aesDecrypt,
-  encryptWithPublicKey,
-  decryptWithPrivateKey
 };
