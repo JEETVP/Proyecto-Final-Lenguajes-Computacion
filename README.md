@@ -41,6 +41,7 @@ Para DSA se firma usando una clave privada con el hash de sha256, convirtiendo l
 LINK DEL DESPLIEGUE EN RENDER: https://proyecto-final-lenguajes-computacion.onrender.com
 
 ENDPOINTS:
+************************************ENDPOINT #1**************************************************
 POST https://proyecto-final-lenguajes-computacion.onrender.com/api/hash/sha256
 BODY:
 {
@@ -50,16 +51,18 @@ RESPONSE:
 {
   "hash": "c3a4a2e49d91f2177113a9adfcb9e9faf9679dc4557a0e3a46021bd39a6f481"
 }
+************************************ENDPOINT #2**************************************************
 POST https://proyecto-final-lenguajes-computacion.onrender.com/api/hash/argon2
 BODY:
 {
   "password": "miContraseñaSegura"
 }
-
 RESPONSE:
 {
   "hash": "$argon2id$v=19$m=65536,t=3,p=4$RVMou6KBZptQtrOhdadk8AStv5glswxgESsopy9FGz1VhRFewmE9Jx1XCO5fM7S"
 }
+************************************ENDPOINT #3**************************************************
+POST https://proyecto-final-lenguajes-computacion.onrender.com/api/encrypt/aes_cbc
 BODY:
 {
   "text": "Texto a cifrar con AES-256"
@@ -70,7 +73,8 @@ RESPONSE:
   "key": "wQ1ow2PJjUzcMHHha4w6U7Al9p/je9tcrIeOZNQNIE=",
   "iv": "OGgA3YU6f3NtDHT88cXZeQ=="
 }
-POST https://proyecto-final-lenguajes-computacion.onrender.com/api/encrypt/aes_cbc
+************************************ENDPOINT #4**************************************************
+POST https://proyecto-final-lenguajes-computacion.onrender.com/api/decrypt/aes_cbc
 BODY:
 {
   "encryptedText": "SDhRezixnPoqaOtBV+3zYD6wLhGeITifKYXXAembKQw=",
@@ -81,19 +85,7 @@ RESPONSE:
 {
   "decrypted": "Texto a cifrar con AES-256"
 }
-POST https://proyecto-final-lenguajes-computacion.onrender.com/api/decrypt/aes_cbc
-BODY:
-{
-  "text": "Hola mundo, este es un mensaje secreto"
-}
-RESPONSE:
-{
-  "algorithm": "chacha20-poly1305",
-  "cipherTextBase64": "SH91cDpzPV5jM6S1sO2HaaEYqyRgMTTl1pEn1+Q3238ftVd46o8=",
-  "keyBase64": "OH51USPqx66J3G6ljMPu7+FVOa0hJfNWAn/9Pwieeew=",
-  "nonceBase64": "RzgK0VJ+0vLD1Us",
-  "authTagBase64": "b7C7YNqbjpB1Zk0vQk3brQg=="
-}
+*****************************************ENDPOINT #5*****************************************
 POST https://proyecto-final-lenguajes-computacion.onrender.com/api/encrypt/chacha20
 BODY:
 {
@@ -107,6 +99,8 @@ RESPONSE:
   "nonceBase64": "RzgK0VJ+0vLD1Us",
   "authTagBase64": "b7C7YNqbjpB1Zk0vQk3brQg=="
 }
+
+*****************************************ENDPOINT #6*****************************************
 POST https://proyecto-final-lenguajes-computacion.onrender.com/api/decrypt/chacha20
 BODY:
 {
@@ -121,6 +115,7 @@ RESPONSE:
   "algorithm": "chacha20-poly1305",
   "plainText": "Hola mundo, este es un mensaje secreto"
 }
+*****************************************ENDPOINT #7*****************************************
 POST https://proyecto-final-lenguajes-computacion.onrender.com/api/encrypt/rsa
 BODY:
 {
@@ -133,6 +128,7 @@ RESPONSE:
   "cipherTextBase64": "RQo9sBwv2I8GEzXoAMjpcpmzfAFS6InGDzH7Nsh4uB1KR9nOk2ta0g83susD7v0dpGVyvluFy0UYIoW0Hxjzb...",
   "publicKeyPem": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOC... (continúa)\n-----END PUBLIC KEY-----"
 }
+*****************************************ENDPOINT #8*****************************************
 POST https://proyecto-final-lenguajes-computacion.onrender.com/api/decrypt/rsa
 BODY:
 {
@@ -143,6 +139,7 @@ RESPONSE:
   "algorithm": "RSA-OAEP",
   "plainText": "Prueba 7 de 10 LETS GO"
 }
+*****************************************ENDPOINT #9*****************************************
 POST https://proyecto-final-lenguajes-computacion.onrender.com/api/sign/dsa
 BODY:
 {
@@ -156,7 +153,7 @@ RESPONSE:
   "signatureBase64": "MD0CHQDZnEpuR16tc/mJ60I1gjk1iuSXC+hcvJv38jRzAhwqY/MhpoRy9Ts@nNmJt1W6M2fYtvN7csSRFS...",
   "publicKeyPem": "-----BEGIN PUBLIC KEY-----\nMIIBwDCCAT0GByqGSM44BAEwggEiAoGBA..... (continúa)\n-----END PUBLIC KEY-----"
 }
-
+*****************************************ENDPOINT #10*****************************************
 POST https://proyecto-final-lenguajes-computacion.onrender.com/api/verify/dsa
 BODY 
 {
@@ -171,7 +168,6 @@ RESPONSE:
   "signatureBase64": "MD0CHQDZnEpuR16tc/mJ60Ija1gkiIuSXC+hcwJv8jRzAhwqY/MhpoRy9TsgNmMJt1W6M2fYtwN7csSRFS2U",
   "valid": true
 }
-
 
 
 
